@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <title>REMS - User Management</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <!-- Favicon -->
+    <link href="/img/favicon.ico" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link href="/lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="/css/style.css" rel="stylesheet">
+</head>
+
+<body>
+<div class="container-xxl position-relative bg-white d-flex p-0">
+    <!-- Spinner Start -->
+    <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+        <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
+    <!-- Spinner End -->
+
+
+    <!-- Sidebar Start -->
+    <div class="sidebar pe-4 pb-3" style="width: 300px;">
+        <nav class="navbar bg-light navbar-light">
+            <a href="dashboard.html" class="navbar-brand mx-4 mb-3">
+                <h3 class="text-primary"><i class="fa fa-hashtag me-2"></i>REMS</h3>
+            </a>
+            <div class="d-flex align-items-center ms-4 mb-4">
+                <div class="position-relative">
+                    <th:block>
+                        <img th:if="${session.user.userType.toString() == 'ADMIN'}" src="/img/Raihan.png" alt="ADMIN Photo" class="rounded-circle" style="width: 40px; height: 40px;">
+                        <img th:if="${session.user.userType.toString() == 'SELLER'}" src="/img/Alamin.jpg" alt="SELLER Photo" class="rounded-circle" style="width: 40px; height: 40px;">
+                        <img th:if="${session.user.userType.toString() == 'BUYER'}" src="/img/Rabby.jpg" alt="BUYER Photo" class="rounded-circle" style="width: 40px; height: 40px;">
+                    </th:block>
+<!--                    <img class="rounded-circle" src="/img/user.jpg" alt="" style="width: 40px; height: 40px;">-->
+                    <div class="bg-success rounded-circle border border-2 border-white position-absolute end-0 bottom-0 p-1"></div>
+                </div>
+                <div class="ms-3" th:object="${session}">
+                    <h6 class="mb-0" th:text="*{user.fullName}"></h6>
+                    <span th:text="*{user.userType}"></span>
+                </div>
+            </div>
+            <div class="navbar-nav w-100">
+                <a href="dashboard" class="nav-item nav-link active"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
+                <a th:if="${session.user.userType.toString() == 'ADMIN'}" href="property-list" class="nav-item nav-link"><i class="fa fa-home me-2"></i>Property Management</a>
+                <a href="property-request-list" class="nav-item nav-link"><i class="fa fa-chart-bar me-2"></i>Property Request</a>
+                <a th:if="${session.user.userType.toString() == 'ADMIN'}" href="user-management" class="nav-item nav-link"><i class="fas fa-user-alt me-2"></i>User Management</a>
+                <a th:if="${session.user.userType.toString() == 'ADMIN'}" href="#" class="nav-item nav-link"><i class="fa fa-table me-2"></i>Transaction Management</a>
+            </div>
+        </nav>
+    </div>
+    <!-- Sidebar End -->
+
+
+    <!-- Content Start -->
+    <div class="content">
+        <!-- Navbar Start -->
+        <nav class="navbar navbar-expand bg-light navbar-light sticky-top px-4 py-0">
+            <a href="dashboard.html" class="navbar-brand d-flex d-lg-none me-4">
+                <h2 class="text-primary mb-0"><i class="fa fa-hashtag"></i></h2>
+            </a>
+            <a href="#" class="sidebar-toggler flex-shrink-0">
+                <i class="fa fa-bars"></i>
+            </a>
+            <form class="d-none d-md-flex ms-4">
+                <input class="form-control border-0" type="search" placeholder="Search">
+            </form>
+            <div class="navbar-nav align-items-center ms-auto">
+                <div class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                        <th:block>
+                            <img th:if="${session.user.userType.toString() == 'ADMIN'}" src="/img/Raihan.png" alt="ADMIN Photo" class="rounded-circle" style="width: 40px; height: 40px;">
+                            <img th:if="${session.user.userType.toString() == 'SELLER'}" src="/img/Alamin.jpg" alt="SELLER Photo" class="rounded-circle" style="width: 40px; height: 40px;">
+                            <img th:if="${session.user.userType.toString() == 'BUYER'}" src="/img/Rabby.jpg" alt="BUYER Photo" class="rounded-circle" style="width: 40px; height: 40px;">
+                        </th:block>
+<!--                        <img class="rounded-circle me-lg-2" src="/img/user.jpg" alt="" style="width: 40px; height: 40px;">-->
+                        <span class="d-none d-lg-inline-flex" th:text="*{session.user.fullName}"></span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
+                        <a href="my-profile" class="dropdown-item">My Profile</a>
+                        <a th:href="@{/signIn}" class="dropdown-item">Log Out</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <!-- Navbar End -->
+
+        <!--Table Code-->
+        <div class="col-sm-12 col-xl-8 mx-auto mt-4">
+            <div style="width: 20%">
+                <button th:onclick="|window.location.href='@{/property-request-list/new}'|" class="btn btn-success btn-sm w-100" >Add New Property Request</button>
+            </div>
+            <div class="bg-light rounded h-100 p-4 shadow-sm w-100 table-responsive">
+                <h6 class="mb-4 text-center">Property Request Management</h6>
+                <table class="table table-hover table-bordered text-center">
+                    <thead>
+                    <tr>
+                        <th scope="col" style="width: 3%;">#</th>
+                        <th scope="col" style="width: 20%;">Property Title</th>
+                        <th scope="col" style="width: 15%;">Property Type</th>
+                        <th scope="col" style="width: 15%;">Location</th>
+                        <th scope="col" style="width: 20%;">Price</th>
+                        <th scope="col" style="width: 10%;">Status</th>
+                        <th scope="col" style="width: 5%;">View</th>
+                        <th th:if="${session.user.userType.toString() == 'ADMIN'}" scope="col" style="width: 5%;">Edit</th>
+                        <th th:if="${session.user.userType.toString() == 'ADMIN'}" scope="col" style="width: 5%;">Approval</th>
+                        <th th:if="${session.user.userType.toString() == 'ADMIN'}" scope="col" style="width: 5%;">Delete</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="propertyRequest, stat : ${propertyRequests}">
+                        <td>
+                            <span th:text="${stat.index + 1}"></span>
+                        </td>
+                        <td>
+                            <span th:text="${propertyRequest.title}"></span>
+                        </td>
+                        <td>
+                            <span th:text="${propertyRequest.propertyType}"></span>
+                        </td>
+                        <td>
+                            <span th:text="${propertyRequest.location}"></span>
+                        </td>
+                        <td>
+                            <span th:text="${propertyRequest.price}"></span>
+                        </td>
+                        <td>
+                            <span th:text="${propertyRequest.status}"></span>
+                        </td>
+                        <td>
+                            <button class="btn btn-info btn-sm w-100" onclick="redirectToViewPage(this)" th:data-id="${propertyRequest.id}">View</button>
+                        </td>
+                        <td th:if="${session.user.userType.toString() == 'ADMIN'}">
+                            <button class="btn btn-warning btn-sm w-100" onclick="redirectToEditPage(this)" th:data-id="${propertyRequest.id}">Edit</button>
+                        </td>
+                        <td th:if="${session.user.userType.toString() == 'ADMIN'}">
+                            <button class="btn btn-success btn-sm w-100" onclick="approvePropertyRequest(this)" th:data-id="${propertyRequest.id}">Approve</button>
+                        </td>
+                        <td th:if="${session.user.userType.toString() == 'ADMIN'}">
+                            <button class="btn btn-danger btn-sm w-100" th:data-id="${propertyRequest.id}" onclick="deleteProperty(this)">Delete</button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!--Table Code ends here-->
+
+        <!-- Footer Start -->
+        <div class="container-fluid pt-4 px-4">
+            <div class="bg-light rounded-top p-4">
+                <div class="row">
+                    <div class="col-12 col-sm-6 text-center text-sm-start">
+                        &copy; <a href="#">Real Estate Management System</a>, All Right Reserved.
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Footer End -->
+    </div>
+    <!-- Content End -->
+
+
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+</div>
+
+<!-- JavaScript Libraries -->
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/lib/chart/chart.min.js"></script>
+<script src="/lib/easing/easing.min.js"></script>
+<script src="/lib/waypoints/waypoints.min.js"></script>
+<script src="/lib/owlcarousel/owl.carousel.min.js"></script>
+<script src="/lib/tempusdominus/js/moment.min.js"></script>
+<script src="/lib/tempusdominus/js/moment-timezone.min.js"></script>
+<script src="/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+
+<!-- Template Javascript -->
+<script src="/js/main.js"></script>
+<!-- Custom JavaScript -->
+<script>
+    function redirectToViewPage(button) {
+        let id = button.getAttribute("data-id");
+        window.location.href = "/property-list/view/" + id;
+    }
+
+    function redirectToEditPage(button) {
+        let id = button.getAttribute("data-id");
+        window.location.href = "/property-list/edit/" + id;
+    }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    function approvePropertyRequest(button) {
+        const propertyRequestId = button.getAttribute('data-id');
+
+        Swal.fire({
+            title: "Want to Approve this?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "Yes, Approve",
+            width: "340px",  // Smaller width
+            padding: "1.2rem",
+            customClass: {
+                popup: "small-alert-popup",
+                title: "small-alert-title",
+                confirmButton: "small-alert-btn",
+                cancelButton: "small-alert-btn",
+                icon: "small-alert-icon"
+            }
+        }).then((result) => {
+            if (result.value) {
+                fetch(`/property-request-list/approve/${propertyRequestId}`, {
+                    method: 'POST'
+                })
+                    .then(response => {
+                        // Handle empty response (204 No Content)
+                        return response.text();
+                    })
+                    .then(() => {
+                        Swal.fire({
+                            title: "APPROVED!",
+                            text: "The property request has been approved.",
+                            icon: "success",
+                            timer: 2000,
+                            showConfirmButton: false,
+                            width: "320px",
+                            padding: "1rem",
+                            customClass: {
+                                popup: "small-alert-popup",
+                                title: "small-alert-title",
+                                icon: "small-alert-icon"
+                            }
+                        }).then(() => {
+                            window.location.reload();
+                        });
+                    })
+            }
+        });
+    }
+</script>
+<script>
+    function deleteProperty(button) {
+        const propertyId = button.getAttribute('data-id');
+
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "Yes, Delete it!",
+            width: "340px",  // Smaller width
+            padding: "1.2rem",
+            customClass: {
+                popup: "small-alert-popup",
+                title: "small-alert-title",
+                confirmButton: "small-alert-btn",
+                cancelButton: "small-alert-btn",
+                icon: "small-alert-icon"
+            }
+        }).then((result) => {
+            if (result.value) {
+                fetch(`/property-request-list/delete/${propertyId}`, {
+                    method: 'DELETE'
+                })
+                    .then(response => {
+                        // Handle empty response (204 No Content)
+                        return response.text();
+                    })
+                    .then(() => {
+                        Swal.fire({
+                            title: "Deleted!",
+                            text: "The property has been deleted.",
+                            icon: "success",
+                            timer: 2000,
+                            showConfirmButton: false,
+                            width: "320px",
+                            padding: "1rem",
+                            customClass: {
+                                popup: "small-alert-popup",
+                                title: "small-alert-title",
+                                icon: "small-alert-icon"
+                            }
+                        }).then(() => {
+                            window.location.reload();
+                        });
+                    })
+            }
+        });
+    }
+</script>
+<style>
+    .small-alert-popup {
+        font-size: 14px;
+        min-height: 160px;
+        max-height: 240px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        padding-bottom: 15px;
+    }
+    .small-alert-title {
+        font-size: 16px;
+        font-weight: bold;
+        text-align: center;
+        margin-top: 5px;
+    }
+    .swal2-icon {
+        width: 50px !important;
+        height: 50px !important;
+        margin-top: -3px !important;
+    }
+    .small-alert-btn {
+        padding: 5px 12px !important;
+        font-size: 13px !important;
+        height: 32px !important;
+        line-height: 15px !important;
+        margin: 5px 5px;
+    }
+
+    .swal2-actions {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        padding-bottom: 10px;
+    }
+</style>
+</body>
+</html>
